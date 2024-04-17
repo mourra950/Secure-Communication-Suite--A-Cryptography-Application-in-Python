@@ -33,7 +33,7 @@ class EncryptionWorker2(QRunnable):
     :
     """
 
-    def __init__(self,plaintext_queue,ciphertext_queue):
+    def __init__(self,plaintext_queue,ciphertext_queue,t):
         super().__init__()
         self.plaintext_queue=plaintext_queue
         self.ciphertext_queue=ciphertext_queue
@@ -59,9 +59,11 @@ class EncryptionWorker2(QRunnable):
                 Initialize the runner function with passed self.args,
         self.kwargs.
         """
+        counter =0
         print("run")
         while True:
             plaintext = self.plaintext_queue.get()
+            counter += 1
             if plaintext is None:
                 counter += 1
                 break
@@ -69,8 +71,7 @@ class EncryptionWorker2(QRunnable):
 
             tmptext = bytes(tmptext, 'utf-8')
             tmptext = self.padding(tmptext)
-            print(tmptext)
 
             ciphertext = self.cipher.encrypt(tmptext)
             self.ciphertext_queue.put(bytes(ciphertext))
-            print(ciphertext)
+            print(counter,tmptext,ciphertext)
