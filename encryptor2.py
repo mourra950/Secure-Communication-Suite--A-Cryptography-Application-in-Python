@@ -21,6 +21,8 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+from Crypto.Util.Padding import pad,unpad
+
 
 
 class EncryptionWorker2(QRunnable):
@@ -33,25 +35,19 @@ class EncryptionWorker2(QRunnable):
     :
     """
 
-    def __init__(self,plaintext_queue,ciphertext_queue,t):
+    def __init__(self,plaintext_queue,ciphertext_queue,data):
         super().__init__()
+        self.data=data
+        print(self.data.test)
         self.plaintext_queue=plaintext_queue
         self.ciphertext_queue=ciphertext_queue
-        self.keysize=16
+        self.key = get_random_bytes(self.data.keysize)
+        
+        # self.keysize=16
         self.AES_setup()
 
     def AES_setup(self):
-        self.key = get_random_bytes(self.keysize)
         self.cipher = AES.new(self.key, AES.MODE_EAX)
-
-    def padding(self, message):
-        # padding message
-        len_diff = self.keysize - len(message)
-        if (math.copysign(1, len_diff) == 1):
-            message += b"\0"*len_diff
-            return message
-        else:
-            return b"too long"
 
     @Slot()
     def run(self):
@@ -67,11 +63,23 @@ class EncryptionWorker2(QRunnable):
             if plaintext is None:
                 counter += 1
                 break
+            self.AES_setup()
             tmptext = f'{plaintext}'
 
             tmptext = bytes(tmptext, 'utf-8')
-            tmptext = self.padding(tmptext)
+            tmptext = pad(tmptext,self.cipher.block_size)
 
             ciphertext = self.cipher.encrypt(tmptext)
+            # self.cipher.update()
+            
+            self.cipher2 = AES.new(self.key, AES.MODE_EAX)
+
+            outtext = unpad(self.cipher2.decrypt(ciphertext),self.cipher.block_size)
+            
+            
+            
             self.ciphertext_queue.put(bytes(ciphertext))
             print(counter,tmptext,ciphertext)
+            print("keysize",self.data.keysize)
+            print("output",outtext)
+            

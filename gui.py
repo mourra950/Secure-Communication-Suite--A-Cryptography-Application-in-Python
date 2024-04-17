@@ -18,6 +18,8 @@ from PySide6.QtCore import QObject, QRunnable, QThreadPool, QTimer, Signal, Slot
 from Crypto.Cipher import AES
 from encryptor import EncryptionWorker
 from Crypto.Random import get_random_bytes
+from Crypto.Util.Padding import pad,unpad
+
 import queue
 import math
 from encryptor2 import EncryptionWorker2
@@ -30,6 +32,7 @@ class MainUI(QMainWindow):
         super().__init__()
         self.test="Testing"        
         self.threadpool = QThreadPool()
+        self.keysize=16
         self.initqueues()
         self.window = loader.load(os.path.join(basedir, "security.ui"), None)
         self.findchildreen()
@@ -44,7 +47,7 @@ class MainUI(QMainWindow):
         self.ciphertext_queue = queue.Queue()
         
     def initworker(self):
-        self.worker = EncryptionWorker2(self.plaintext_queue,self.ciphertext_queue)
+        self.worker = EncryptionWorker2(self.plaintext_queue,self.ciphertext_queue,self)
         self.threadpool.start(self.worker)
         
     def findchildreen(self):
@@ -65,13 +68,13 @@ class MainUI(QMainWindow):
     def encrypt(self):
         plaintext = self.qt_textarea.toPlainText()
         self.keysize = self.qt_keysizeComboBox.currentData()
-        print(plaintext, self.keysize, type(self.keysize))
+        # print(plaintext, self.keysize, type(self.keysize))
         
         for i in range(math.ceil(len(plaintext)/self.keysize)):
             sclicedmessage=plaintext[0+self.keysize*i:self.keysize*i+self.keysize]
             self.plaintext_queue.put(sclicedmessage)
             print(i,sclicedmessage)
-        print("Queued")
+        # print("Queued")
 
 
 def main():
