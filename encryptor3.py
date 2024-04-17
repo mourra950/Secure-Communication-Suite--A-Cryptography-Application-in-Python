@@ -21,19 +21,9 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
-from Crypto.Util.Padding import pad,unpad
+import rsa
+class EncryptionWorker3(QRunnable):
 
-
-
-class EncryptionWorker2(QRunnable):
-    """
-    Worker thread
-
-    :param args: Arguments to make available to the run code
-    :param kwargs: Keywords arguments to make available to the run
-    :code
-    :
-    """
 
     def __init__(self,plaintext_queue,ciphertext_queue,data):
         super().__init__()
@@ -41,13 +31,8 @@ class EncryptionWorker2(QRunnable):
         print(self.data.test)
         self.plaintext_queue=plaintext_queue
         self.ciphertext_queue=ciphertext_queue
-        self.key = get_random_bytes(self.data.keysize)
+        self.public_key,self.private_key = rsa.newkeys(1024)
         
-        # self.keysize=16
-        self.AES_setup()
-
-    def AES_setup(self):
-        self.cipher = AES.new(self.key, AES.MODE_EAX,nonce=b'1111111111111111')
 
     @Slot()
     def run(self):
@@ -63,23 +48,16 @@ class EncryptionWorker2(QRunnable):
             if plaintext is None:
                 counter += 1
                 break
-            self.AES_setup()
             tmptext = f'{plaintext}'
 
-            tmptext = bytes(tmptext, 'utf-8')
-            tmptext = pad(tmptext,self.cipher.block_size,style='iso7816')
+            tmptext = tmptext.encode()
+            ciphertext = rsa.encrypt(tmptext,self.public_key)
 
-            ciphertext = self.cipher.encrypt(tmptext)
-            # self.cipher.update()
-            print("NOnceeeee",self.cipher.nonce)
-            self.cipher2 = AES.new(self.key, AES.MODE_EAX,nonce=b'1'*16)
-
-            outtext = unpad(self.cipher2.decrypt(ciphertext),self.cipher.block_size,style='iso7816')
+            outtext = rsa.decrypt(ciphertext, self.private_key)
             
+            outtext = outtext.decode()
             
-            
-            self.ciphertext_queue.put(bytes(ciphertext))
+            self.ciphertext_queue.put(ciphertext)
             print(counter,tmptext,ciphertext)
-            print("keysize",self.data.keysize)
             print("output",outtext)
             

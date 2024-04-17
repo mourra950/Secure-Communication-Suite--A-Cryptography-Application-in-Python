@@ -23,6 +23,7 @@ from Crypto.Util.Padding import pad,unpad
 import queue
 import math
 from encryptor2 import EncryptionWorker2
+from encryptor3 import EncryptionWorker3
 basedir = os.path.dirname(__file__)
 loader = QUiLoader()
 
@@ -47,7 +48,7 @@ class MainUI(QMainWindow):
         self.ciphertext_queue = queue.Queue()
         
     def initworker(self):
-        self.worker = EncryptionWorker2(self.plaintext_queue,self.ciphertext_queue,self)
+        self.worker = EncryptionWorker3(self.plaintext_queue,self.ciphertext_queue,self)
         self.threadpool.start(self.worker)
         
     def findchildreen(self):
@@ -62,10 +63,10 @@ class MainUI(QMainWindow):
         self.qt_keysizeComboBox.addItem("32", 32)
 
     def setup_encryptbtn(self):
-        self.qt_encryptbutn.clicked.connect(self.encrypt)
+        self.qt_encryptbutn.clicked.connect(self.encrypt_RSA)
         
         
-    def encrypt(self):
+    def encrypt_AES(self):
         plaintext = self.qt_textarea.toPlainText()
         self.keysize = self.qt_keysizeComboBox.currentData()
         # print(plaintext, self.keysize, type(self.keysize))
@@ -73,9 +74,12 @@ class MainUI(QMainWindow):
         for i in range(math.ceil(len(plaintext)/self.keysize)):
             sclicedmessage=plaintext[0+self.keysize*i:self.keysize*i+self.keysize]
             self.plaintext_queue.put(sclicedmessage)
-            print(i,sclicedmessage)
+            # print(i,sclicedmessage)
         # print("Queued")
-
+        
+    def encrypt_RSA(self):
+        plaintext = self.qt_textarea.toPlainText()
+        self.plaintext_queue.put(plaintext)
 
 def main():
     app = QApplication(sys.argv)
