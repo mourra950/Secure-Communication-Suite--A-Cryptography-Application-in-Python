@@ -24,6 +24,8 @@ import queue
 import math
 from encryptor2 import EncryptionWorker2
 from encryptor3 import EncryptionWorker3
+from encryptor4 import EncryptionWorker4
+
 basedir = os.path.dirname(__file__)
 loader = QUiLoader()
 
@@ -41,14 +43,14 @@ class MainUI(QMainWindow):
         self.setup_encryptbtn()
         self.window.setWindowTitle("Security")
         self.initworker()
-
         self.window.show()
+        
     def initqueues(self):
         self.plaintext_queue = queue.Queue()
         self.ciphertext_queue = queue.Queue()
         
     def initworker(self):
-        self.worker = EncryptionWorker3(self.plaintext_queue,self.ciphertext_queue,self)
+        self.worker = EncryptionWorker4(self.plaintext_queue,self.ciphertext_queue,self)
         self.threadpool.start(self.worker)
         
     def findchildreen(self):
@@ -63,7 +65,7 @@ class MainUI(QMainWindow):
         self.qt_keysizeComboBox.addItem("32", 32)
 
     def setup_encryptbtn(self):
-        self.qt_encryptbutn.clicked.connect(self.encrypt_RSA)
+        self.qt_encryptbutn.clicked.connect(self.encrypt_SHA)
         
         
     def encrypt_AES(self):
@@ -78,6 +80,9 @@ class MainUI(QMainWindow):
         # print("Queued")
         
     def encrypt_RSA(self):
+        plaintext = self.qt_textarea.toPlainText()
+        self.plaintext_queue.put(plaintext)
+    def encrypt_SHA(self):
         plaintext = self.qt_textarea.toPlainText()
         self.plaintext_queue.put(plaintext)
 
