@@ -38,7 +38,21 @@
         <item>
          <widget class="QPushButton" name="EncryptButn">
           <property name="text">
-           <string>Encrypt</string>
+           <string>AES</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton">
+          <property name="text">
+           <string>SHA256</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_3">
+          <property name="text">
+           <string>RSA</string>
           </property>
          </widget>
         </item>
