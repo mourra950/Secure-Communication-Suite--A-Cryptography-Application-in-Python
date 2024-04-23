@@ -2,7 +2,7 @@ from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 from Crypto.Util.Padding import pad, unpad
 
-
+from PySide6.QtWidgets import  QFileDialog
 class AES_Task():
     def __init__(self):
         super().__init__()
@@ -18,11 +18,16 @@ class AES_Task():
         bytesplaintext = bytes(plaintext, 'utf-8')
         padedtext = pad(bytesplaintext, cipher.block_size, style='iso7816')
         ciphertext = cipher.encrypt(padedtext)
-        self.encrypted = ciphertext
+        path,_=QFileDialog.getSaveFileName( None, "Open Bin File", "./", "Binary Files (*.bin)")
+        with open(path, 'wb+') as f:
+            f.write(ciphertext)
         self.qt_cipher.setText(str(ciphertext))
 
     def AES_Decrypt(self):
-        ciphertext = self.encrypted
+        path,_=QFileDialog.getOpenFileName( None, "Open Bin File", "./", "Binary Files (*.bin)")
+        with  open(path, 'rb') as f:
+            ciphertext=f.read()
+            
         Decipher = AES.new(self.key_AES, AES.MODE_EAX, nonce=b'1'*16)
         decryptedtext = unpad(Decipher.decrypt(
             ciphertext), self.blockSize_AES, style='iso7816')
