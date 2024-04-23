@@ -24,17 +24,28 @@ from Crypto.Util.Padding import pad, unpad
 import queue
 import math
 from AES import AES_Task
-from encryptor3 import EncryptionWorker3
-from encryptor4 import EncryptionWorker4
+from DES import DES_Task
+
+from RSA import RSA_Task
+
+from SHA import SHA256_Task
+from MD5 import MD5_Task
+
+
 
 basedir = os.path.dirname(__file__)
 loader = QUiLoader()
 
 
-class MainUI(QMainWindow,AES_Task):
+class MainUI(QMainWindow,AES_Task,RSA_Task,SHA256_Task,MD5_Task,DES_Task):
     def __init__(self):
         QMainWindow.__init__(self)
         AES_Task.__init__(self)
+        DES_Task.__init__(self)
+        
+        RSA_Task.__init__(self)
+        SHA256_Task.__init__(self)
+        MD5_Task.__init__(self)
         self.window = loader.load(os.path.join(basedir, "security.ui"), None)
         self.window.setWindowTitle("Security")        
         # self.test = "Testing"
@@ -54,9 +65,10 @@ class MainUI(QMainWindow,AES_Task):
         self.ciphertext_queue = queue.Queue()
 
     def initworker(self):
-        self.worker = EncryptionWorker4(
-            self.plaintext_queue, self.ciphertext_queue, self)
-        self.threadpool.start(self.worker)
+        pass
+        # self.worker = EncryptionWorker4(
+        #     self.plaintext_queue, self.ciphertext_queue, self)
+        # self.threadpool.start(self.worker)
     def connections(self):
         self.qt_AES_btn.clicked.connect()
 #done
@@ -65,14 +77,25 @@ class MainUI(QMainWindow,AES_Task):
         self.qt_cipher = self.window.findChild(QTextEdit, "CipherArea")
         self.qt_text = self.window.findChild(QTextEdit, "TextArea")        
         self.qt_key_line = self.window.findChild(QLineEdit, "Key_lineEdit")
+
         self.qt_AES_btn = self.window.findChild(QPushButton, "AES_btn")
         self.qt_AES_Dbtn = self.window.findChild(QPushButton, "AES_Dbtn")
         
         self.qt_DES_btn = self.window.findChild(QPushButton, "DES_btn")
+        self.qt_DES_Dbtn = self.window.findChild(QPushButton, "DES_Dbtn")
+       
         self.qt_ECC_btn = self.window.findChild(QPushButton, "ECC_btn")
+        self.qt_ECC_Dbtn = self.window.findChild(QPushButton, "ECC_Dbtn")
+        
         self.qt_MD5_btn = self.window.findChild(QPushButton, "MD5_btn")
+        self.qt_MD5_Dbtn = self.window.findChild(QPushButton, "MD5_Dbtn")
+        
         self.qt_SHA256_btn = self.window.findChild(QPushButton, "SHA256_btn")
+        self.qt_SHA256_Dbtn = self.window.findChild(QPushButton, "SHA256_Dbtn")
+        
         self.qt_RSA_btn = self.window.findChild(QPushButton, "RSA_btn")
+        self.qt_RSA_Dbtn = self.window.findChild(QPushButton, "RSA_Dbtn")
+        
 #done
     def setup_combox(self):
         self.qt_keysizeComboBox.addItem("16", 16)
@@ -86,11 +109,17 @@ class MainUI(QMainWindow,AES_Task):
     def setup_btn(self):
         self.qt_AES_btn.clicked.connect(self.AES_Encrypt)
         self.qt_AES_Dbtn.clicked.connect(self.AES_Decrypt)
-        self.qt_DES_btn.clicked.connect(self.)
+        self.qt_DES_btn.clicked.connect(self.DES_Encrypt)
+        self.qt_DES_Dbtn.clicked.connect(self.DES_Decrypt)
+        self.qt_RSA_btn.clicked.connect(self.RSA_Encrypt)
+        self.qt_RSA_Dbtn.clicked.connect(self.RSA_Decrypt)
+        self.qt_SHA256_btn.clicked.connect(self.hash_sha256)
+        self.qt_MD5_btn.clicked.connect(self.hash_md5)
+        
+        # self.qt_DES_btn.clicked.connect(self.)
         
         # self.qt_ECC_btn.clicked.connect(self.)
         # self.qt_MD5_btn.clicked.connect(self.)
-        # self.qt_SHA256_btn.clicked.connect(self.)
         # self.qt_encryptbutn.clicked.connect(self.encrypt_SHA)
 
     # def encrypt_AES(self):

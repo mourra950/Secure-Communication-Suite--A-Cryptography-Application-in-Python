@@ -1,36 +1,38 @@
-from Crypto.Cipher import AES
+from Crypto.Cipher import AES,DES
 from Crypto.Random import get_random_bytes
+from PySide6.QtCore import (
+    Slot,
+)
 
 from Crypto.Util.Padding import pad,unpad
 
 
 
-class AES_Task():
+class DES_Task():
     def __init__(self):
         super().__init__()
         
         
 
-    def AES_Encrypt(self):
+    def DES_Encrypt(self):
         plaintext=self.qt_text.toPlainText()
-        self.key_AES = get_random_bytes(self.keysize)
-        cipher = AES.new(self.key_AES, AES.MODE_EAX,nonce=b'1'*16)
-        self.blockSize_AES=cipher.block_size
-        
-        bytesplaintext = bytes(plaintext, 'utf-8')
+        self.key_DES = get_random_bytes(8)
+        cipher=DES.new(self.key_DES,DES.MODE_EAX)
+        # cipher = AES.new(self.key_AES, AES.MODE_EAX,nonce=b'1'*16)
+        self.blockSize_DES=cipher.block_size
+        self.nonce_DES =  cipher.nonce
+        print(self.blockSize_DES)
+        bytesplaintext = plaintext.encode()
         padedtext = pad(bytesplaintext,cipher.block_size,style='iso7816')
         ciphertext = cipher.encrypt(padedtext)
-        self.encrypted=ciphertext
+        self.encrypted_DES=ciphertext
         self.qt_cipher.setText(str(ciphertext))
         
-    def AES_Decrypt(self):
-        ciphertext=self.encrypted
-        # ciphertext = bytes(ciphertext, 'utf-8')
-        # ciphertext =pad(ciphertext,self.blockSize_AES,style='iso7816')
-        
-        Decipher=AES.new(self.key_AES, AES.MODE_EAX,nonce=b'1'*16)
-        decryptedtext=unpad(Decipher.decrypt(ciphertext),self.blockSize_AES,style='iso7816')
-        self.qt_cipher.setText("Message when Decrypted "+ decryptedtext.decode("utf-8"))
+    def DES_Decrypt(self):
+        ciphertext=self.encrypted_DES
+        Decipher=DES.new(self.key_DES, DES.MODE_EAX,nonce=self.nonce_DES)
+        decryptedtext=unpad(Decipher.decrypt(ciphertext),self.blockSize_DES,style='iso7816')
+        self.qt_cipher.setText("Message when Decrypted using DES "+ decryptedtext.decode("utf-8"))
         
     # @Slot()
     # def run(self):
