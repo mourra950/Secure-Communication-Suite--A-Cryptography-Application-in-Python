@@ -16,9 +16,9 @@ class DES_Task():
 
     def DES_Encrypt(self):
         plaintext=self.qt_text.toPlainText()
+        # DES key must be 8 bytes long
         self.key_DES = get_random_bytes(8)
         cipher=DES.new(self.key_DES,DES.MODE_EAX)
-        # cipher = AES.new(self.key_AES, AES.MODE_EAX,nonce=b'1'*16)
         self.blockSize_DES=cipher.block_size
         self.nonce_DES =  cipher.nonce
         print(self.blockSize_DES)

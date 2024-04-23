@@ -53,7 +53,7 @@
           <item>
            <widget class="QLabel" name="label">
             <property name="text">
-             <string>Encrypt</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Encrypt&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
           </item>
@@ -106,7 +106,7 @@
           <item>
            <widget class="QLabel" name="label_2">
             <property name="text">
-             <string>Decrypt</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Decrypt&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
           </item>
@@ -121,20 +121,6 @@
            <widget class="QPushButton" name="DES_Dbtn">
             <property name="text">
              <string>DES</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="MD5_Dbtn">
-            <property name="text">
-             <string>MD5</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="SHA256_Dbtn">
-            <property name="text">
-             <string>SHA256</string>
             </property>
            </widget>
           </item>

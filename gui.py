@@ -48,14 +48,10 @@ class MainUI(QMainWindow,AES_Task,RSA_Task,SHA256_Task,MD5_Task,DES_Task):
         MD5_Task.__init__(self)
         self.window = loader.load(os.path.join(basedir, "security.ui"), None)
         self.window.setWindowTitle("Security")        
-        # self.test = "Testing"
-        # self.threadpool = QThreadPool()
         self.keysize = 16
-        # self.initqueues()
         self.findchildreen()
         self.setup_combox()
         self.setup_btn()
-        # self.initworker()
         self.window.show()
     def Threads(self):
         self.AES_Thread=AES_Task()
@@ -66,9 +62,6 @@ class MainUI(QMainWindow,AES_Task,RSA_Task,SHA256_Task,MD5_Task,DES_Task):
 
     def initworker(self):
         pass
-        # self.worker = EncryptionWorker4(
-        #     self.plaintext_queue, self.ciphertext_queue, self)
-        # self.threadpool.start(self.worker)
     def connections(self):
         self.qt_AES_btn.clicked.connect()
 #done
@@ -88,10 +81,8 @@ class MainUI(QMainWindow,AES_Task,RSA_Task,SHA256_Task,MD5_Task,DES_Task):
         self.qt_ECC_Dbtn = self.window.findChild(QPushButton, "ECC_Dbtn")
         
         self.qt_MD5_btn = self.window.findChild(QPushButton, "MD5_btn")
-        self.qt_MD5_Dbtn = self.window.findChild(QPushButton, "MD5_Dbtn")
         
         self.qt_SHA256_btn = self.window.findChild(QPushButton, "SHA256_btn")
-        self.qt_SHA256_Dbtn = self.window.findChild(QPushButton, "SHA256_Dbtn")
         
         self.qt_RSA_btn = self.window.findChild(QPushButton, "RSA_btn")
         self.qt_RSA_Dbtn = self.window.findChild(QPushButton, "RSA_Dbtn")
@@ -116,31 +107,8 @@ class MainUI(QMainWindow,AES_Task,RSA_Task,SHA256_Task,MD5_Task,DES_Task):
         self.qt_SHA256_btn.clicked.connect(self.hash_sha256)
         self.qt_MD5_btn.clicked.connect(self.hash_md5)
         
-        # self.qt_DES_btn.clicked.connect(self.)
         
-        # self.qt_ECC_btn.clicked.connect(self.)
-        # self.qt_MD5_btn.clicked.connect(self.)
-        # self.qt_encryptbutn.clicked.connect(self.encrypt_SHA)
 
-    # def encrypt_AES(self):
-    #     plaintext = self.qt_textarea.toPlainText()
-    #     self.keysize = self.qt_keysizeComboBox.currentData()
-    #     # print(plaintext, self.keysize, type(self.keysize))
-
-    #     for i in range(math.ceil(len(plaintext)/self.keysize)):
-    #         sclicedmessage = plaintext[0+self.keysize *
-    #                                    i:self.keysize*i+self.keysize]
-    #         self.plaintext_queue.put(sclicedmessage)
-    #         # print(i,sclicedmessage)
-    #     # print("Queued")
-
-    # def encrypt_RSA(self):
-    #     plaintext = self.qt_textarea.toPlainText()
-    #     self.plaintext_queue.put(plaintext)
-
-    # def encrypt_SHA(self):
-    #     plaintext = self.qt_textarea.toPlainText()
-    #     self.plaintext_queue.put(plaintext)
 
 
 def main():
