@@ -31,5 +31,5 @@ class AES_Task():
         Decipher = AES.new(self.key_AES, AES.MODE_EAX, nonce=b'1'*16)
         decryptedtext = unpad(Decipher.decrypt(
             ciphertext), self.blockSize_AES, style='iso7816')
-        self.qt_cipher.setText("Message when Decrypted " +
+        self.qt_cipher.setText("Message when Decrypted: " +
                                decryptedtext.decode("utf-8"))

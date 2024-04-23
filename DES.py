@@ -25,11 +25,11 @@ class DES_Task():
         bytesplaintext = plaintext.encode()
         padedtext = pad(bytesplaintext,cipher.block_size,style='iso7816')
         ciphertext = cipher.encrypt(padedtext)
-        self.encrypted_DES=ciphertext
+        self.save_binary(ciphertext)
         self.qt_cipher.setText(str(ciphertext))
         
     def DES_Decrypt(self):
-        ciphertext=self.encrypted_DES
+        ciphertext=self.read_binary()
         Decipher=DES.new(self.key_DES, DES.MODE_EAX,nonce=self.nonce_DES)
         decryptedtext=unpad(Decipher.decrypt(ciphertext),self.blockSize_DES,style='iso7816')
         self.qt_cipher.setText("Message when Decrypted using DES "+ decryptedtext.decode("utf-8"))

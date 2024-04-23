@@ -1,0 +1,3 @@
+pycryptodome==3.20.0
+PySide6
+eciespy==0.4.1

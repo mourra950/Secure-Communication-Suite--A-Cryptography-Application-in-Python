@@ -12,6 +12,8 @@ from PySide6.QtWidgets import (
     QLineEdit
 
 )
+from PySide6.QtWidgets import  QFileDialog
+
 from PySide6.QtUiTools import QUiLoader
 from PySide6 import QtCore
 from PySide6.QtCore import QThreadPool
@@ -31,19 +33,23 @@ from RSA import RSA_Task
 from SHA import SHA256_Task
 from MD5 import MD5_Task
 
+from ECC import ECC_Task
+
 
 
 basedir = os.path.dirname(__file__)
 loader = QUiLoader()
 
 
-class MainUI(QMainWindow,AES_Task,RSA_Task,SHA256_Task,MD5_Task,DES_Task):
+class MainUI(QMainWindow,AES_Task,RSA_Task,SHA256_Task,MD5_Task,DES_Task,ECC_Task):
     def __init__(self):
         QMainWindow.__init__(self)
         AES_Task.__init__(self)
         DES_Task.__init__(self)
         
         RSA_Task.__init__(self)
+        ECC_Task.__init__(self)
+
         SHA256_Task.__init__(self)
         MD5_Task.__init__(self)
         self.window = loader.load(os.path.join(basedir, "security.ui"), None)
@@ -65,6 +71,20 @@ class MainUI(QMainWindow,AES_Task,RSA_Task,SHA256_Task,MD5_Task,DES_Task):
     def connections(self):
         self.qt_AES_btn.clicked.connect()
 #done
+    def save_binary(self,text):
+        path,_=QFileDialog.getSaveFileName( None, "Open Bin File", "./", "Binary Files (*.bin)")
+        with open(path, 'wb+') as f:
+            f.write(text)
+            
+    def read_binary(self):
+        binary=None
+        path,_=QFileDialog.getOpenFileName( None, "Open Bin File", "./", "Binary Files (*.bin)")
+        with  open(path, 'rb') as f:
+            binary=f.read()
+        return binary
+        
+
+
     def findchildreen(self):
         self.qt_keysizeComboBox = self.window.findChild(QComboBox, "KeySizeComboBox")
         self.qt_cipher = self.window.findChild(QTextEdit, "CipherArea")
@@ -106,6 +126,8 @@ class MainUI(QMainWindow,AES_Task,RSA_Task,SHA256_Task,MD5_Task,DES_Task):
         self.qt_RSA_Dbtn.clicked.connect(self.RSA_Decrypt)
         self.qt_SHA256_btn.clicked.connect(self.hash_sha256)
         self.qt_MD5_btn.clicked.connect(self.hash_md5)
+        self.qt_ECC_btn.clicked.connect(self.ECC_Encrypt)
+        self.qt_ECC_Dbtn.clicked.connect(self.ECC_Decrypt)
         
         
 

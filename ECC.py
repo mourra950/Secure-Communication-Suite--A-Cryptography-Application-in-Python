@@ -1,28 +1,29 @@
 from Crypto.PublicKey import ECC
-
+from ecies.utils import generate_eth_key
+from ecies import encrypt, decrypt
+from PySide6.QtWidgets import  QFileDialog
+import binascii
 class ECC_Task():
-
 
     def __init__(self):#,plaintext_queue,ciphertext_queue,data
         super().__init__()
-        # self.data=data
-        # print(self.data.test)
-        # self.plaintext_queue=plaintext_queue
-        # self.ciphertext_queue=ciphertext_queue
-        self.public_key,self.private_key = rsa.newkeys(1024)
+        self.private_key = generate_eth_key()
+        self.private_key_hex = self.private_key.to_hex()
+        self.public_key_hex = self.private_key.public_key.to_hex()
+
     
-    def RSA_Encrypt(self):
-        plaintext=self.qt_text.toPlainText()
-        ciphertext = rsa.encrypt(plaintext.encode(),self.public_key)
-        self.RSA_ciphertext=ciphertext
+    def ECC_Encrypt(self):
+        plaintext=self.qt_text.toPlainText().encode()
+        ciphertext = encrypt(self.public_key_hex, plaintext)
+        self.save_binary(ciphertext)
         self.qt_cipher.setText(str(ciphertext))
         
-    def RSA_Decrypt(self):
-        plaintext=self.RSA_ciphertext
-        outtext = rsa.decrypt(plaintext, self.private_key)
-        outtext = outtext.decode()
-        self.qt_cipher.setText("Decrypted RSA is '"+outtext+"'")
-        
+    def ECC_Decrypt(self):
+        ciphertext = self.read_binary()
+        decryptedtext = decrypt(self.private_key_hex , ciphertext)
+
+        self.qt_cipher.setText("Message when Decrypted: " +
+                               decryptedtext.decode("utf-8"))
             
     #         self.ciphertext_queue.put(ciphertext)
     #         print(counter,tmptext,ciphertext)
