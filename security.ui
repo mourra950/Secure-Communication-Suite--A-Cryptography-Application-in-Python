@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>885</width>
-    <height>473</height>
+    <width>886</width>
+    <height>488</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,7 +16,17 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
-     <widget class="QTextEdit" name="TextArea"/>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QTextEdit" name="TextArea"/>
+      </item>
+      <item>
+       <widget class="QTextEdit" name="CipherArea"/>
+      </item>
+     </layout>
     </item>
     <item>
      <widget class="QComboBox" name="KeySizeComboBox">
@@ -29,6 +39,9 @@
      </widget>
     </item>
     <item>
+     <widget class="QLineEdit" name="Key_lineEdit"/>
+    </item>
+    <item>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
@@ -36,32 +49,110 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QPushButton" name="EncryptButn">
-          <property name="text">
-           <string>AES</string>
-          </property>
-         </widget>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Encrypt</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="AES_btn">
+            <property name="text">
+             <string>AES</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="DES_btn">
+            <property name="text">
+             <string>DES</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="MD5_btn">
+            <property name="text">
+             <string>MD5</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="SHA256_btn">
+            <property name="text">
+             <string>SHA256</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="RSA_btn">
+            <property name="text">
+             <string>RSA</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="ECC_btn">
+            <property name="text">
+             <string>ECC</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton">
-          <property name="text">
-           <string>SHA256</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_3">
-          <property name="text">
-           <string>RSA</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_2">
-          <property name="text">
-           <string>Send</string>
-          </property>
-         </widget>
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>Decrypt</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="AES_Dbtn">
+            <property name="text">
+             <string>AES</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_2">
+            <property name="text">
+             <string>DES</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_3">
+            <property name="text">
+             <string>MD5</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_4">
+            <property name="text">
+             <string>SHA256</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_5">
+            <property name="text">
+             <string>RSA</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_6">
+            <property name="text">
+             <string>ECC</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>
@@ -74,7 +165,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>885</width>
+     <width>886</width>
      <height>22</height>
     </rect>
    </property>
