@@ -12,21 +12,21 @@ from PySide6.QtWidgets import (
     QTextEdit,
     QLineEdit,
     QDialog,
-    QLabel
+    QLabel, QFileDialog
 
 )
-from PySide6.QtWidgets import  QFileDialog
+from PySide6.QtWidgets import QFileDialog
 from PySide6.QtUiTools import QUiLoader
 from PySide6 import QtCore
 from PySide6.QtCore import QThreadPool
 from DB import DB
-
+import RSA
 import hashlib
-
 
 
 basedir = os.path.dirname(__file__)
 loader = QUiLoader()
+
 
 class PrintDialog(QDialog):
     def __init__(self, text):
@@ -42,58 +42,73 @@ class PrintDialog(QDialog):
         self.setLayout(self.layout)
         self.exec()
 
-class AuthUI(QMainWindow,DB):
+
+class AuthUI(QMainWindow, DB):
     def __init__(self):
         QMainWindow.__init__(self)
         # DB.__init__(self)
         self.window = loader.load(os.path.join(basedir, "auth.ui"), None)
-        self.window.setWindowTitle("Authentication")        
+        self.window.setWindowTitle("Authentication")
         self.find_children()
         self.setup_btn()
         self.window.show()
 
-
     def find_children(self):
-        self.qt_username_line = self.window.findChild(QLineEdit, "username_lineEdit")
-        self.qt_password_line = self.window.findChild(QLineEdit, "password_lineEdit")
+        self.qt_username_line = self.window.findChild(
+            QLineEdit, "username_lineEdit")
+        self.qt_password_line = self.window.findChild(
+            QLineEdit, "password_lineEdit")
 
         self.qt_new_btn = self.window.findChild(QPushButton, "newUser_btn")
-        self.qt_auth_btn = self.window.findChild(QPushButton, "authenticateUser_btn")
-        
+        self.qt_auth_btn = self.window.findChild(
+            QPushButton, "authenticateUser_btn")
+
     def setup_btn(self):
         self.qt_new_btn.clicked.connect(self.new_user)
         self.qt_auth_btn.clicked.connect(self.authenticate_user)
-        
-    def hash_sha256(self,plaintext):
+
+    def hash_sha256(self, plaintext):
         hasher = hashlib.new("SHA256")
         hasher.update(plaintext.encode())
         return str(hasher.hexdigest())
-        
+
     def new_user(self):
         username = self.qt_username_line.text()
         password = self.qt_password_line.text()
+        temp = RSA.RSA_Task()
+        public = temp.rsa_public_key
+        private = temp.rsa_private_key
 
-        if self.users.find_one({'username':username}) != None:
+        if self.users.find_one({'username': username}) != None:
             PrintDialog("user found")
             return
+        path, _ = QFileDialog.getSaveFileName(
+            self.window, "Save Public Key", "./key/", "PEM (*.pem)")
+        with open(path, "wb+") as f:
+            f.write(str(private.d).encode())
         hash_password = self.hash_sha256(password)
+        # (publickey,sizekey)=public
+        print(public.n)
         user = {
-            'username':username,
-            'password':hash_password
-        }    
+            'username': username,
+            'password': hash_password,
+        }
         self.users.insert_one(user)
+        self.keys.insert_one({'username': username, 'key': str(public.n)})
         PrintDialog(f"user {user}, added")
-    
+
     def authenticate_user(self):
         username = self.qt_username_line.text()
         password = self.qt_password_line.text()
         hash_password = self.hash_sha256(password)
-
-        if self.users.find_one({'username':username,'password':hash_password}) != None:
-            PrintDialog("user authenticated")
+        t = self.users.find_one(
+            {'username': username, 'password': hash_password})
+        if self.users.find_one({'username': username, 'password': hash_password}) != None:
+            PrintDialog(f"user authenticated {t}")
         else:
             PrintDialog("user not found")
-            
+
+
 def main():
     app = QApplication(sys.argv)
     window = AuthUI()

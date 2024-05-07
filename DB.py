@@ -13,6 +13,7 @@ class DB:
 
         self.db = self.client["Security"]
         self.users = self.db["Users"]
+        self.keys= self.db["Keys"]
 
         
     
