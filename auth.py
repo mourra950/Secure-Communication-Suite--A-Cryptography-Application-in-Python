@@ -8,17 +8,14 @@ from PySide6.QtWidgets import (
     QMainWindow,
     QApplication,
     QPushButton,
-    QComboBox,
-    QTextEdit,
     QLineEdit,
     QDialog,
-    QLabel, QFileDialog,QWidget
-
+    QLabel,
+    QFileDialog
 )
 from PySide6.QtWidgets import QFileDialog
 from PySide6.QtUiTools import QUiLoader
 from PySide6 import QtCore
-from PySide6.QtCore import QThreadPool
 from DB import DB
 import RSA
 import hashlib
@@ -49,7 +46,7 @@ class AuthUI(QMainWindow, DB):
         # DB.__init__(self)
         self.window = loader.load(os.path.join(basedir, "auth.ui"), None)
         self.mainpage = loader.load(os.path.join(basedir, "security.ui"), None)
-        
+
         self.window.setWindowTitle("Authentication")
         self.find_children()
         self.setup_btn()
@@ -71,13 +68,12 @@ class AuthUI(QMainWindow, DB):
         self.qt_new_btn.clicked.connect(self.new_user)
         self.qt_auth_btn.clicked.connect(self.authenticate_user)
         self.qt_switch_btn.clicked.connect(self.switchpage)
-        
+
     def switchpage(self):
         print("hamada")
         self.window.close()
         self.mainpage.show()
-        
-        
+
     def hash_sha256(self, plaintext):
         hasher = hashlib.new("SHA256")
         hasher.update(plaintext.encode())

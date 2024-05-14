@@ -3,7 +3,7 @@ import sys
 # from PySide6 import QtWidget
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtCore import Qt
-
+import socketio
 from PySide6.QtWidgets import (
     QMainWindow,
     QApplication,
@@ -22,9 +22,11 @@ loader = QUiLoader()
 
 
 class MainUI(QMainWindow):
+    
     def __init__(self):
+        self.sio=socketio.Client()
+        
         QMainWindow.__init__(self)
-        self.sio = socketio.Client()
         self.Conditions = True
         self.current_user = ""
         self.window = loader.load(os.path.join(
@@ -35,6 +37,11 @@ class MainUI(QMainWindow):
 
         self.fill_left()
         self.window.show()
+        self.sio.connect('http://localhost:3000')
+    def callback(self):
+        @self.sio.event
+        def connect():
+            print('connection established')
 
     def findchildreen(self):
         self.qt_left_scroll = self.window.findChild(

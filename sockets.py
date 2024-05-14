@@ -1,7 +1,8 @@
 import socketio
 import SHAversion2
-sio = socketio.Client()
 
+class Sockets(socketio.simple_client):
+    
 
 @sio.event
 def connect():
