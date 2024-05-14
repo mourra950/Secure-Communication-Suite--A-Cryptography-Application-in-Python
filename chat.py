@@ -1,16 +1,15 @@
+from sockets import SocketsIO
 import os
 import sys
 # from PySide6 import QtWidget
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtCore import Qt
-import socketio
+from auth import AuthUI
 from PySide6.QtWidgets import (
     QMainWindow,
     QApplication,
     QScrollArea, QVBoxLayout, QPushButton, QLabel, QTextEdit, QSizePolicy
 )
-
-
 from PySide6.QtUiTools import QUiLoader
 
 
@@ -21,32 +20,24 @@ basedir = os.path.dirname(__file__)
 loader = QUiLoader()
 
 
-class MainUI(QMainWindow):
-    
+class MainUI(QMainWindow, SocketsIO, AuthUI):
+
     def __init__(self):
-        self.sio=socketio.Client()
-        
         QMainWindow.__init__(self)
+        SocketsIO.__init__(self)
+        AuthUI.__init__(self)
+        self.window_chat = loader.load(
+            os.path.join(basedir, "window_chat.ui"), None)
         self.Conditions = True
         self.current_user = ""
-        self.window = loader.load(os.path.join(
-            basedir, "window_chat.ui"), None)
-        self.window.setWindowTitle("Chat")
-        self.findchildreen()
-        self.setup()
+        self.window_chat.setWindowTitle("Chat")
+        self.chat_findchildreen()
+        self.chat_setup()
 
         self.fill_left()
-        self.window.show()
-        self.sio.connect('http://localhost:3000')
-    def callback(self):
-        @self.sio.event
-        def connect():
-            print('connection established')
-        @self.sio.event
-        def loginResponse(data):
-            print(data)
+        self.auth_window.show()
 
-    def findchildreen(self):
+    def chat_findchildreen(self):
         self.qt_left_scroll = self.window.findChild(
             QVBoxLayout, "Button_vertical")
         self.qt_Message_scroll = self.window.findChild(
@@ -55,12 +46,9 @@ class MainUI(QMainWindow):
         self.qt_send_btn = self.window.findChild(QPushButton, "Send_btn")
         self.qt_message_area = self.window.findChild(QTextEdit, "Message_Area")
 
-    def setup(self):
-        self.qt_send_btn.clicked.connect(self.sendemit)
-        
-        # self.qt_send_btn.clicked.connect(self.sendMessage)
-    def sendemit(self):
-        self.sio.emit('login', {'username': 'test', 'password': '123'})
+    def chat_setup(self):
+        self.qt_send_btn.clicked.connect(self.sendMessage)
+
     def sendMessage(self):
         message = self.qt_message_area.toPlainText()
         print(f"Message from {self.current_user}: {message}")

@@ -50,7 +50,7 @@
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item>
+        <item alignment="Qt::AlignRight">
          <widget class="QLabel" name="User_label">
           <property name="maximumSize">
            <size>

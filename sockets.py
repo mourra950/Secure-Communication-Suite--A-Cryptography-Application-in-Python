@@ -1,32 +1,35 @@
 import socketio
 import SHAversion2
 
-class Sockets(socketio.simple_client):
-    
 
-@sio.event
-def connect():
-    print('connection established')
+class SocketsIO(socketio.simple_client):
+    def __init__(self):
+        self.sio = socketio.Client()
+        self.sio.connect('http://localhost:3000')
 
+    def callbacks(self):
+        @self.sio.event
+        def connect():
+            print('connection established')
 
-@sio.event
-def my_message(data):
-    print('message received with ', data)
-    sio.emit('my response', {'response': 'my response'})
+        @self.sio.event
+        def loginResponse(data):
+            print(data)
 
+        @self.sio.event
+        def disconnect():
+            print('disconnected from server')
 
-@sio.event
-def disconnect():
-    print('disconnected from server')
+        @self.sio.event
+        def my_message(data):
+            print('message received with ', data)
 
+    def socket_login(self, username, password):
+        hashedPassword = SHAversion2.hash_sha256(password)
+        self.sio.emit('login', {'username': username,
+                      'hashedPassword': hashedPassword})
 
-@sio.event
-def loginResponse(data):
-    print(data)
-
-
-sio.connect('http://localhost:3000')
-t=SHAversion2.hash_sha256("123")
-
-sio.emit('login', {'username': 'test', 'password': t})
-sio.wait()
+    def socket_signup(self, username, password, publicKey):
+        t = SHAversion2.hash_sha256(password)
+        self.sio.emit('login', {'username': username,
+                      'hashedPassword': t, "publicKey": publicKey})
