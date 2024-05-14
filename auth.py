@@ -80,9 +80,21 @@ class AuthUI(DB):
         public = temp.rsa_public_key
         private = temp.rsa_private_key
 
-        self.socket_signup(username, password, str(public.n))
+        self.socket_signup(username, password, public.n)
 
-        
+        # path, _ = QFileDialog.getSaveFileName(
+        #     self.window, "Save Public Key", "./key/", "PEM (*.pem)")
+        # with open(path, "wb+") as f:
+        #     f.write(str(private.d).encode())
+        # hash_password = self.hash_sha256(password)
+        # user = {
+        #     'username': username,
+        #     'password': hash_password,
+        # }
+
+        # self.users.insert_one(user)
+        # self.keys.insert_one({'username': username, 'key': str(public.n)})
+        # PrintDialog(f"user {user}, added")
 
     def authenticate_user(self):
         username = self.qt_username_line.text()
