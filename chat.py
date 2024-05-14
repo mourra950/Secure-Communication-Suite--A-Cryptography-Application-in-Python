@@ -42,6 +42,9 @@ class MainUI(QMainWindow):
         @self.sio.event
         def connect():
             print('connection established')
+        @self.sio.event
+        def loginResponse(data):
+            print(data)
 
     def findchildreen(self):
         self.qt_left_scroll = self.window.findChild(
@@ -53,8 +56,11 @@ class MainUI(QMainWindow):
         self.qt_message_area = self.window.findChild(QTextEdit, "Message_Area")
 
     def setup(self):
-        self.qt_send_btn.clicked.connect(self.sendMessage)
-
+        self.qt_send_btn.clicked.connect(self.sendemit)
+        
+        # self.qt_send_btn.clicked.connect(self.sendMessage)
+    def sendemit(self):
+        self.sio.emit('login', {'username': 'test', 'password': '123'})
     def sendMessage(self):
         message = self.qt_message_area.toPlainText()
         print(f"Message from {self.current_user}: {message}")
