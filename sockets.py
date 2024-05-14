@@ -1,5 +1,5 @@
 import socketio
-
+import SHAversion2
 sio = socketio.Client()
 
 
@@ -25,5 +25,6 @@ def login(data):
 
 
 sio.connect('http://localhost:3000')
-sio.emit('login', {'username': 'Omar', 'password': '01060120066'})
+t=SHAversion2.SHA256_Task.hash_sha256("123")
+sio.emit('login', {'username': 'test', 'password': t})
 sio.wait()
