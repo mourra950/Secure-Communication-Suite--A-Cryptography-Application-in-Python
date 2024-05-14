@@ -71,7 +71,7 @@ class MainUI(QMainWindow, SocketsIO, AuthUI):
         self.t = QVBoxLayout()
         for i in self.all_users:
             temp = QPushButton(f"{i["username"]}")
-            temp.clicked.connect(lambda func=self.setMessage, pub=i["publickey"],
+            temp.clicked.connect(lambda func=self.setMessage, pub=i["key"],
                                  user=i: func(user, pub))
             self.qt_left_scroll.addWidget(temp)
 
