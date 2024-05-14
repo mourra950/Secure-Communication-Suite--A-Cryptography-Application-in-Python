@@ -65,7 +65,7 @@ class AuthUI():
         self.SocketsIO.socket_signup(username, password, public.n)
 
         path, _ = QFileDialog.getSaveFileName(
-            self.window, "Save Public Key", "./key/", "PEM (*.pem)")
+            self.auth_window, "Save Private Key", "./key/", "PEM (*.pem)")
         with open(path, "wb+") as f:
             f.write(str(private.d).encode())
 
