@@ -6,6 +6,7 @@ class SocketsIO():
     def __init__(self):
         self.sio = socketio.Client()
         self.sio.connect('http://localhost:3000')
+        self.callbacks()
 
     def callbacks(self):
         @self.sio.event
