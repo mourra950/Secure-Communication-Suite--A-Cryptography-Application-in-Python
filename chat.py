@@ -37,7 +37,9 @@ class MainUI(QMainWindow, AuthUI):
         
         self.SocketsIO = SocketsIO()
         self.SocketsIO.switch.connect(self.switchpage)
-        self.SocketsIO.run()        
+        self.SocketsIO.users.connect(self.populate_user_list)
+        
+    
         
 
     def chat_findchildreen(self):
@@ -70,8 +72,8 @@ class MainUI(QMainWindow, AuthUI):
             self.Conditions = True
         self.qt_Message_scroll.addWidget(temp)
 
-    def populate_user_list(self):
-        self.t = QVBoxLayout()
+    def populate_user_list(self, users):
+        self.all_users = users
         for i in self.all_users:
             temp = QPushButton(f"{i['username']}")
             temp.clicked.connect(lambda func=self.setMessage, pub=i["key"],

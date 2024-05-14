@@ -24,6 +24,7 @@ class AuthUI():
     def __init__(self):
         self.auth_window = loader.load(os.path.join(basedir, "auth.ui"), None)
         self.auth_window.setWindowTitle("Authentication")
+        
         self.auth_find_children()
         self.auth_setup_btn()
 
@@ -61,7 +62,7 @@ class AuthUI():
         public = temp.rsa_public_key
         private = temp.rsa_private_key
 
-        self.socket_signup(username, password, public.n)
+        self.SocketsIO.socket_signup(username, password, public.n)
 
         path, _ = QFileDialog.getSaveFileName(
             self.window, "Save Public Key", "./key/", "PEM (*.pem)")
@@ -71,7 +72,7 @@ class AuthUI():
     def authenticate_user(self):
         username = self.qt_username_line.text()
         password = self.qt_password_line.text()
-        self.socket_login(username, password)
+        self.SocketsIO.socket_login(username, password)
 
 
 def main():

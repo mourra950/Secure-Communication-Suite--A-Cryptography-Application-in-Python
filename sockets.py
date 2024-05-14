@@ -36,6 +36,7 @@ class PrintDialog(QDialog):
 class SocketsIO(QObject):
 
     switch = Signal()
+    users = Signal(list)
 
     def __init__(self):
         QObject.__init__(self)
