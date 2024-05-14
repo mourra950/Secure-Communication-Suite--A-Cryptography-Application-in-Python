@@ -1,17 +1,21 @@
 import os
 import sys
-# from PySide6 import QtWidget
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtCore import Qt
-from auth import AuthUI
 from PySide6.QtWidgets import (
     QMainWindow,
     QApplication,
-    QScrollArea, QVBoxLayout, QPushButton, QLabel, QTextEdit, QSizePolicy
+    QVBoxLayout,
+    QPushButton,
+    QLabel,
+    QTextEdit,
+    QSizePolicy
 )
-from PySide6.QtUiTools import QUiLoader
-from sockets import SocketsIO
 
+from PySide6.QtUiTools import QUiLoader
+
+from sockets import SocketsIO
+from auth import AuthUI
 
 basedir = os.path.dirname(__file__)
 loader = QUiLoader()
@@ -20,8 +24,8 @@ loader = QUiLoader()
 class MainUI(QMainWindow, AuthUI):
 
     def __init__(self):
-        # QMainWindow.__init__(self)
-        # SocketsIO.__init__(self)
+        QMainWindow.__init__(self)
+
         AuthUI.__init__(self)
         self.window_chat = loader.load(
             os.path.join(basedir, "window_chat.ui"), None)
@@ -32,15 +36,12 @@ class MainUI(QMainWindow, AuthUI):
         self.chat_setup()
         self.all_users = []
 
-        self.populate_user_list()
+        self.populate_user_list(self.all_users)
         self.auth_window.show()
-        
+
         self.SocketsIO = SocketsIO()
         self.SocketsIO.switch.connect(self.switchpage)
         self.SocketsIO.users.connect(self.populate_user_list)
-        
-    
-        
 
     def chat_findchildreen(self):
         self.qt_left_scroll = self.window_chat.findChild(
@@ -77,12 +78,12 @@ class MainUI(QMainWindow, AuthUI):
         for i in self.all_users:
             temp = QPushButton(f"{i['username']}")
             temp.clicked.connect(lambda func=self.setMessage, pub=i["key"],
-                                 user=i: func(user, pub))
+                                 user=i['username']: func(user, pub))
             self.qt_left_scroll.addWidget(temp)
 
     def setMessage(self, User, Public):
         # print(User)
-        self.qt_user_label.setText(User, Public)
+        self.qt_user_label.setText(f"{User}, {Public}")
         self.pub_key = Public
         self.current_user = User
 

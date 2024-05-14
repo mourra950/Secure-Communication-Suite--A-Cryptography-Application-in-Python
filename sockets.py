@@ -20,7 +20,7 @@ from PySide6.QtCore import Signal, QObject
 class PrintDialog(QDialog):
 
     def __init__(self, text):
-        super(PrintDialog, self).__init__()
+        # super(PrintDialog, self).__init__()
         self.setWindowTitle("Output")
         self.layout = QVBoxLayout()
         self.label = QLabel(text)
@@ -42,6 +42,8 @@ class SocketsIO(QObject):
         QObject.__init__(self)
         # print(self)
         self.sio = socketio.Client()
+        self.sio.connect('http://localhost:3000')
+        self.callbacks()
 
     def run(self):
         try:
@@ -49,7 +51,6 @@ class SocketsIO(QObject):
             self.callbacks()
         except:
             self.switch.emit()
-            # print("ahmed")
 
     def callbacks(self):
         @self.sio.event
@@ -59,14 +60,12 @@ class SocketsIO(QObject):
         @self.sio.event
         def loginResponse(data):
             print(data)
-            PrintDialog(data['message'])
             if data['success'] == True:
                 self.switch.emit()
 
         @self.sio.event
         def signupResponse(data):
             print(data)
-            PrintDialog(data['message'])
 
         @self.sio.event
         def disconnect():
@@ -79,10 +78,8 @@ class SocketsIO(QObject):
         @self.sio.event
         def getAllUsersResponse(data):
             print(data)
-            self.all_users = data["users"]
 
-    def custom_slot(self, *args):
-        self.switchpage()
+            self.users.emit(data["users"])
 
     def socket_login(self, username, password):
         hashedPassword = SHAversion2.hash_sha256(password)
