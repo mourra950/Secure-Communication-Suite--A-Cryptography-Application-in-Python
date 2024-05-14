@@ -20,11 +20,12 @@ def disconnect():
 
 
 @sio.event
-def login(data):
+def loginResponse(data):
     print(data)
 
 
 sio.connect('http://localhost:3000')
-t=SHAversion2.SHA256_Task.hash_sha256("123")
+t=SHAversion2.hash_sha256("123")
+
 sio.emit('login', {'username': 'test', 'password': t})
 sio.wait()
