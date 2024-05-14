@@ -34,7 +34,7 @@ class MainUI(QMainWindow, SocketsIO, AuthUI):
         self.chat_findchildreen()
         self.chat_setup()
 
-        self.fill_left()
+        self.populate_user_list()
         self.auth_window.show()
 
     def chat_findchildreen(self):
@@ -67,17 +67,18 @@ class MainUI(QMainWindow, SocketsIO, AuthUI):
             self.Conditions = True
         self.qt_Message_scroll.addWidget(temp)
 
-    def fill_left(self):
+    def populate_user_list(self):
         self.t = QVBoxLayout()
-        for i in user_list:
-            temp = QPushButton(f"{i}")
-            temp.clicked.connect(lambda func=self.setMessage,
-                                 user=i: func(user))
+        for i in self.all_users:
+            temp = QPushButton(f"{i["username"]}")
+            temp.clicked.connect(lambda func=self.setMessage, pub=i["publickey"],
+                                 user=i: func(user, pub))
             self.qt_left_scroll.addWidget(temp)
 
-    def setMessage(self, User):
+    def setMessage(self, User, Public):
         # print(User)
-        self.qt_user_label.setText(User)
+        self.qt_user_label.setText(User, Public)
+        self.pub_key = Public
         self.current_user = User
 
 

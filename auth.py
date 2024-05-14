@@ -25,20 +25,6 @@ basedir = os.path.dirname(__file__)
 loader = QUiLoader()
 
 
-class PrintDialog(QDialog):
-    def __init__(self, text):
-        super(PrintDialog, self).__init__()
-        self.setWindowTitle("Output")
-        self.layout = QVBoxLayout()
-        self.label = QLabel(text)
-        self.label.setAlignment(QtCore.Qt.AlignCenter)
-        self.layout.addWidget(self.label)
-        self.ok_button = QPushButton("OK")
-        self.ok_button.clicked.connect(self.accept)
-        self.layout.addWidget(self.ok_button)
-        self.setLayout(self.layout)
-        self.exec()
-
 
 class AuthUI(DB):
     def __init__(self):
@@ -66,8 +52,9 @@ class AuthUI(DB):
 
     def switchpage(self):
         self.auth_window.close()
+        
         self.window_chat.show()
-
+        self.request_all_users()
     def hash_sha256(self, plaintext):
         hasher = hashlib.new("SHA256")
         hasher.update(plaintext.encode())
@@ -82,19 +69,10 @@ class AuthUI(DB):
 
         self.socket_signup(username, password, public.n)
 
-        # path, _ = QFileDialog.getSaveFileName(
-        #     self.window, "Save Public Key", "./key/", "PEM (*.pem)")
-        # with open(path, "wb+") as f:
-        #     f.write(str(private.d).encode())
-        # hash_password = self.hash_sha256(password)
-        # user = {
-        #     'username': username,
-        #     'password': hash_password,
-        # }
-
-        # self.users.insert_one(user)
-        # self.keys.insert_one({'username': username, 'key': str(public.n)})
-        # PrintDialog(f"user {user}, added")
+        path, _ = QFileDialog.getSaveFileName(
+            self.window, "Save Public Key", "./key/", "PEM (*.pem)")
+        with open(path, "wb+") as f:
+            f.write(str(private.d).encode())
 
     def authenticate_user(self):
         username = self.qt_username_line.text()
