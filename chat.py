@@ -33,6 +33,7 @@ class MainUI(QMainWindow, SocketsIO, AuthUI):
         self.window_chat.setWindowTitle("Chat")
         self.chat_findchildreen()
         self.chat_setup()
+        self.all_users = []
 
         self.populate_user_list()
         self.auth_window.show()
@@ -70,7 +71,7 @@ class MainUI(QMainWindow, SocketsIO, AuthUI):
     def populate_user_list(self):
         self.t = QVBoxLayout()
         for i in self.all_users:
-            temp = QPushButton(f"{i["username"]}")
+            temp = QPushButton(f"{i['username']}")
             temp.clicked.connect(lambda func=self.setMessage, pub=i["key"],
                                  user=i: func(user, pub))
             self.qt_left_scroll.addWidget(temp)
