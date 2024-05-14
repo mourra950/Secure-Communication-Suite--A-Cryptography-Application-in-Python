@@ -2,7 +2,7 @@ import socketio
 import SHAversion2
 
 
-class SocketsIO(socketio.simple_client):
+class SocketsIO():
     def __init__(self):
         self.sio = socketio.Client()
         self.sio.connect('http://localhost:3000')
