@@ -38,13 +38,14 @@ class MainUI(QMainWindow, SocketsIO, AuthUI):
         self.auth_window.show()
 
     def chat_findchildreen(self):
-        self.qt_left_scroll = self.window.findChild(
+        self.qt_left_scroll = self.window_chat.findChild(
             QVBoxLayout, "Button_vertical")
-        self.qt_Message_scroll = self.window.findChild(
+        self.qt_Message_scroll = self.window_chat.findChild(
             QVBoxLayout, "Messages_layouts")
-        self.qt_user_label = self.window.findChild(QLabel, "User_label")
-        self.qt_send_btn = self.window.findChild(QPushButton, "Send_btn")
-        self.qt_message_area = self.window.findChild(QTextEdit, "Message_Area")
+        self.qt_user_label = self.window_chat.findChild(QLabel, "User_label")
+        self.qt_send_btn = self.window_chat.findChild(QPushButton, "Send_btn")
+        self.qt_message_area = self.window_chat.findChild(
+            QTextEdit, "Message_Area")
 
     def chat_setup(self):
         self.qt_send_btn.clicked.connect(self.sendMessage)

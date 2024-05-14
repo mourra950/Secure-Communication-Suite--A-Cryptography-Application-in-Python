@@ -48,15 +48,15 @@ class AuthUI(DB):
         self.auth_setup_btn()
 
     def auth_find_children(self):
-        self.qt_username_line = self.window.findChild(
+        self.qt_username_line = self.auth_window.findChild(
             QLineEdit, "username_lineEdit")
-        self.qt_password_line = self.window.findChild(
+        self.qt_password_line = self.auth_window.findChild(
             QLineEdit, "password_lineEdit")
-        self.qt_new_btn = self.window.findChild(
+        self.qt_new_btn = self.auth_window.findChild(
             QPushButton, "newUser_btn")
-        self.qt_auth_btn = self.window.findChild(
+        self.qt_auth_btn = self.auth_window.findChild(
             QPushButton, "authenticateUser_btn")
-        self.qt_switch_btn = self.window.findChild(
+        self.qt_switch_btn = self.auth_window.findChild(
             QPushButton, "SwitchButton")
 
     def auth_setup_btn(self):
