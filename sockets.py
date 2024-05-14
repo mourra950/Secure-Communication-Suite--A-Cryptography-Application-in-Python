@@ -30,6 +30,6 @@ class SocketsIO(socketio.simple_client):
                       'hashedPassword': hashedPassword})
 
     def socket_signup(self, username, password, publicKey):
-        t = SHAversion2.hash_sha256(password)
+        hashedPassword = SHAversion2.hash_sha256(password)
         self.sio.emit('login', {'username': username,
-                      'hashedPassword': t, "publicKey": publicKey})
+                      'hashedPassword': hashedPassword, "publicKey": publicKey})
