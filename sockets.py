@@ -14,7 +14,7 @@ from PySide6.QtWidgets import QFileDialog
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtUiTools import QUiLoader
 from PySide6 import QtCore
-from PySide6.QtCore import Signal
+from PySide6.QtCore import Signal, QObject
 
 
 class PrintDialog(QDialog):
@@ -33,13 +33,22 @@ class PrintDialog(QDialog):
         self.exec()
 
 
-class SocketsIO():
-    message = Signal(str)
+class SocketsIO(QObject):
+
+    switch = Signal()
 
     def __init__(self):
+        QObject.__init__(self)
+        # print(self)
         self.sio = socketio.Client()
-        self.sio.connect('http://localhost:3000')
-        self.callbacks()
+
+    def run(self):
+        try:
+            self.sio.connect('http://localhost:3000')
+            self.callbacks()
+        except:
+            self.switch.emit()
+            # print("ahmed")
 
     def callbacks(self):
         @self.sio.event
@@ -51,8 +60,7 @@ class SocketsIO():
             print(data)
             PrintDialog(data['message'])
             if data['success'] == True:
-                self.message.connect(self.custom_slot)
-                self.message.emit("Switching to chat window")
+                self.switch.emit()
 
         @self.sio.event
         def signupResponse(data):
@@ -71,7 +79,6 @@ class SocketsIO():
         def getAllUsersResponse(data):
             print(data)
             self.all_users = data["users"]
-            self.populate_user_list()
 
     def custom_slot(self, *args):
         self.switchpage()

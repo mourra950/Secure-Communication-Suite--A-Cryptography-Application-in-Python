@@ -1,4 +1,3 @@
-from sockets import SocketsIO
 import os
 import sys
 # from PySide6 import QtWidget
@@ -11,17 +10,17 @@ from PySide6.QtWidgets import (
     QScrollArea, QVBoxLayout, QPushButton, QLabel, QTextEdit, QSizePolicy
 )
 from PySide6.QtUiTools import QUiLoader
-
+from sockets import SocketsIO
 
 
 basedir = os.path.dirname(__file__)
 loader = QUiLoader()
 
 
-class MainUI(QMainWindow, SocketsIO, AuthUI):
+class MainUI(QMainWindow, AuthUI):
 
     def __init__(self):
-        QMainWindow.__init__(self)
+        # QMainWindow.__init__(self)
         # SocketsIO.__init__(self)
         AuthUI.__init__(self)
         self.window_chat = loader.load(
@@ -35,6 +34,11 @@ class MainUI(QMainWindow, SocketsIO, AuthUI):
 
         self.populate_user_list()
         self.auth_window.show()
+        
+        self.SocketsIO = SocketsIO()
+        self.SocketsIO.switch.connect(self.switchpage)
+        self.SocketsIO.run()        
+        
 
     def chat_findchildreen(self):
         self.qt_left_scroll = self.window_chat.findChild(
