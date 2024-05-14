@@ -16,6 +16,9 @@ class SocketsIO():
         @self.sio.event
         def loginResponse(data):
             print(data)
+        @self.sio.event
+        def signupResponse(data):
+            print(data)
 
         @self.sio.event
         def disconnect():
