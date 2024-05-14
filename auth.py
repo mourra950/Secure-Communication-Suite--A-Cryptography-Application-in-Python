@@ -99,7 +99,7 @@ class AuthUI(DB):
     def authenticate_user(self):
         username = self.qt_username_line.text()
         password = self.qt_password_line.text()
-        self.socket_signin(username, password)
+        self.socket_login(username, password)
 
 
 def main():
