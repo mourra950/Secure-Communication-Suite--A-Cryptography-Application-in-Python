@@ -12,7 +12,7 @@ from PySide6.QtWidgets import (
     QTextEdit,
     QLineEdit,
     QDialog,
-    QLabel, QFileDialog
+    QLabel, QFileDialog,QWidget
 
 )
 from PySide6.QtWidgets import QFileDialog
@@ -48,6 +48,8 @@ class AuthUI(QMainWindow, DB):
         QMainWindow.__init__(self)
         # DB.__init__(self)
         self.window = loader.load(os.path.join(basedir, "auth.ui"), None)
+        self.mainpage = loader.load(os.path.join(basedir, "security.ui"), None)
+        
         self.window.setWindowTitle("Authentication")
         self.find_children()
         self.setup_btn()
@@ -62,11 +64,20 @@ class AuthUI(QMainWindow, DB):
         self.qt_new_btn = self.window.findChild(QPushButton, "newUser_btn")
         self.qt_auth_btn = self.window.findChild(
             QPushButton, "authenticateUser_btn")
+        self.qt_switch_btn = self.window.findChild(
+            QPushButton, "SwitchButton")
 
     def setup_btn(self):
         self.qt_new_btn.clicked.connect(self.new_user)
         self.qt_auth_btn.clicked.connect(self.authenticate_user)
-
+        self.qt_switch_btn.clicked.connect(self.switchpage)
+        
+    def switchpage(self):
+        print("hamada")
+        self.window.close()
+        self.mainpage.show()
+        
+        
     def hash_sha256(self, plaintext):
         hasher = hashlib.new("SHA256")
         hasher.update(plaintext.encode())
