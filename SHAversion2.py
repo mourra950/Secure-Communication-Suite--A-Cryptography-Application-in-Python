@@ -8,5 +8,4 @@ class SHA256_Task():
         plaintext=self.qt_text.toPlainText()
         hasher.update(plaintext.encode())
         self.qt_cipher.setText(str(hasher.hexdigest()))
-        return str(hasher.hexdigest())
     
