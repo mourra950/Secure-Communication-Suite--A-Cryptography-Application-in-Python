@@ -29,7 +29,7 @@ loader = QUiLoader()
 
 class AuthUI(DB):
     def __init__(self):
-        self.auth_window = loader.load(os.path.join(basedir, "auth.ui"), None)
+        self.auth_window = loader.load(os.path.join(basedir, "auth.ui"), self.window_chat)
         self.auth_window.setWindowTitle("Authentication")
         self.auth_find_children()
         self.auth_setup_btn()
@@ -53,9 +53,9 @@ class AuthUI(DB):
 
     def switchpage(self):
         self.auth_window.close()
-        
         self.window_chat.show()
         self.request_all_users()
+        
     def hash_sha256(self, plaintext):
         hasher = hashlib.new("SHA256")
         hasher.update(plaintext.encode())

@@ -13,8 +13,6 @@ from PySide6.QtWidgets import (
 from PySide6.QtUiTools import QUiLoader
 
 
-user_list = ["ahmed", "Mohamed", "Yousef"]
-
 
 basedir = os.path.dirname(__file__)
 loader = QUiLoader()
@@ -24,7 +22,7 @@ class MainUI(QMainWindow, SocketsIO, AuthUI):
 
     def __init__(self):
         QMainWindow.__init__(self)
-        SocketsIO.__init__(self)
+        # SocketsIO.__init__(self)
         AuthUI.__init__(self)
         self.window_chat = loader.load(
             os.path.join(basedir, "window_chat.ui"), None)
