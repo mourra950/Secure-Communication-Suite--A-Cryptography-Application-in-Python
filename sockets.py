@@ -62,6 +62,12 @@ class SocketsIO(QObject):
         def loginResponse(data):
             print(data)
             if data['success'] == True:
+                print(data['user']['username'])
+
+                @self.sio.on(f"readMessage_{data['user']['username']}")
+                def readMessage(response):
+                    print(response)
+                    self.read_message.emit(response)
                 self.switch.emit()
 
         @self.sio.event
@@ -103,4 +109,4 @@ class SocketsIO(QObject):
     def send_message(self, cyphertext, cypherkey, user):
         self.sio.emit('message', {"cyphertext": cyphertext,
                       "cypherkey": cypherkey, "user": user})
-        #send who am i ?
+        # send who am i ?
