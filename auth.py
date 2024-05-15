@@ -1,5 +1,4 @@
-import os
-import sys
+
 
 from PySide6 import QtWidgets
 from PySide6.QtUiTools import QUiLoader
@@ -15,7 +14,8 @@ from PySide6.QtUiTools import QUiLoader
 import RSA
 import hashlib
 
-
+import os
+import sys
 basedir = os.path.dirname(__file__)
 loader = QUiLoader()
 
@@ -24,7 +24,7 @@ class AuthUI():
     def __init__(self):
         self.auth_window = loader.load(os.path.join(basedir, "auth.ui"), None)
         self.auth_window.setWindowTitle("Authentication")
-        
+
         self.auth_find_children()
         self.auth_setup_btn()
 
@@ -65,7 +65,7 @@ class AuthUI():
         self.SocketsIO.socket_signup(username, password, public.n)
 
         path, _ = QFileDialog.getSaveFileName(
-            self.window, "Save Public Key", "./key/", "PEM (*.pem)")
+            None, "Save Public Key", "./key/", "PEM (*.pem)")
         with open(path, "wb+") as f:
             f.write(str(private.d).encode())
 

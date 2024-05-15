@@ -66,6 +66,7 @@ class SocketsIO(QObject):
         @self.sio.event
         def signupResponse(data):
             print(data)
+            
 
         @self.sio.event
         def disconnect():
