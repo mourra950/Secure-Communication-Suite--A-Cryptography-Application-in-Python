@@ -36,6 +36,7 @@ class PrintDialog(QDialog):
 class SocketsIO(QObject):
 
     switch = Signal()
+    read_message = Signal(dict)
     users = Signal(list)
 
     def __init__(self):
@@ -66,7 +67,6 @@ class SocketsIO(QObject):
         @self.sio.event
         def signupResponse(data):
             print(data)
-            
 
         @self.sio.event
         def disconnect():
@@ -82,6 +82,11 @@ class SocketsIO(QObject):
 
             self.users.emit(data["users"])
 
+        @self.sio.event
+        def readMessage(data):
+            print(data)
+            self.read_message.emit(data)
+
     def socket_login(self, username, password):
         hashedPassword = SHAversion2.hash_sha256(password)
         self.sio.emit('login', {'username': username,
@@ -94,3 +99,8 @@ class SocketsIO(QObject):
 
     def request_all_users(self):
         self.sio.emit('getAllUsers')
+
+    def send_message(self, cyphertext, cypherkey, user):
+        self.sio.emit('message', {"cyphertext": cyphertext,
+                      "cypherkey": cypherkey, "user": user})
+        #send who am i ?
