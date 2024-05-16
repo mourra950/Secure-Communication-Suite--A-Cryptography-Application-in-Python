@@ -57,10 +57,10 @@ class MainUI(QMainWindow, AuthUI):
             private=self.private_key_bin, text=cypherkey)
         message = self.AES.AES_Decrypt(ciphertext=ciphertext, key_AES=key_AES)
         if user in self.message_dict:
-            self.message_dict[self.current_user].append((message, 1))
+            self.message_dict[user].append((message, 1))
         else:
-            self.message_dict[self.current_user] = []
-            self.message_dict[self.current_user].append((message, 1))
+            self.message_dict[user] = []
+            self.message_dict[user].append((message, 1))
         self.show_messages()
 
     def chat_findchildreen(self):
