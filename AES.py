@@ -8,7 +8,7 @@ from PySide6.QtWidgets import QFileDialog
 class AES_Task():
     def __init__(self):
         super().__init__()
-        self.keysize = 32
+        self.keysize = 16
 
     def AES_Encrypt(self, toggle=False,text="ahmed"):
         plaintext = text
@@ -28,6 +28,7 @@ class AES_Task():
         return ciphertext, self.key_AES
 
     def AES_Decrypt(self, ciphertext, key_AES):
+        print(f"key_AES: {key_AES}")
         Decipher = AES.new(key_AES, AES.MODE_EAX, nonce=b'1'*16)
         decryptedtext = unpad(Decipher.decrypt(
             ciphertext), 16, style='iso7816')

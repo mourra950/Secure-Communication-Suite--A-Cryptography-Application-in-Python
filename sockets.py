@@ -53,6 +53,12 @@ class SocketsIO(QObject):
         except:
             self.switch.emit()
 
+    def callbacks2(self, text):
+        @self.sio.on(f"readMessage_{text}")
+        def readMessage(response):
+            print(response)
+            self.read_message.emit(response)
+
     def callbacks(self):
         @self.sio.event
         def connect():
@@ -63,11 +69,7 @@ class SocketsIO(QObject):
             print(data)
             if data['success'] == True:
                 print(data['user']['username'])
-
-                @self.sio.on(f"readMessage_{data['user']['username']}")
-                def readMessage(response):
-                    print(response)
-                    self.read_message.emit(response)
+                self.callbacks2(data['user']['username'])
                 self.switch.emit()
 
         @self.sio.event
@@ -84,7 +86,7 @@ class SocketsIO(QObject):
 
         @self.sio.event
         def getAllUsersResponse(data):
-            print(data)
+            # print(data)
 
             self.users.emit(data["users"])
 
@@ -101,12 +103,15 @@ class SocketsIO(QObject):
     def socket_signup(self, username, password, publicKey):
         hashedPassword = SHAversion2.hash_sha256(password)
         self.sio.emit('signup', {'username': username,
-                      'hashedPassword': hashedPassword, "publicKey": str(publicKey)})
+                      'hashedPassword': hashedPassword, "publicKey": publicKey.decode('utf-8')})
 
     def request_all_users(self):
         self.sio.emit('getAllUsers')
 
     def send_message(self, cyphertext, cypherkey, user):
+        # print(cyphertext,cypherkey)
+        # print(cyphertext.decode('utf-8'),cypherkey.encode('utf-8'))
+        # return
         self.sio.emit('message', {"cyphertext": cyphertext,
                       "cypherkey": cypherkey, "user": user})
         # send who am i ?

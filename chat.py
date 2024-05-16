@@ -29,6 +29,7 @@ class MainUI(QMainWindow, AuthUI):
         self.RSA = RSA_Task()
         self.AES = AES_Task()
         self.message_dict = dict()
+        self.users_data = None
 
         AuthUI.__init__(self)
         self.window_chat = loader.load(
@@ -49,19 +50,18 @@ class MainUI(QMainWindow, AuthUI):
         self.SocketsIO.read_message.connect(self.read_message)
 
     def read_message(self, data):
-        cyphertext = data['cyphertext']
+        ciphertext = data['cyphertext']
         cypherkey = data['cypherkey']
-        sender_pub_key = data['public']
-        user = data['user']
-        private_key_bin = self.read_private()
-        AES_Key = self.RSA.RSA_Decrypt(
-            private=private_key_bin, public=sender_pub_key, text=cypherkey)
-        message = self.AES.AES_Decrypt(text=cyphertext, key=AES_Key)
+        user = data['sender']
+        key_AES = self.RSA.RSA_Decrypt(
+            private=self.private_key_bin, text=cypherkey)
+        message = self.AES.AES_Decrypt(ciphertext=ciphertext, key_AES=key_AES)
         if user in self.message_dict:
-            print('found')
+            self.message_dict[self.current_user].append((message, 1))
         else:
             self.message_dict[self.current_user] = []
             self.message_dict[self.current_user].append((message, 1))
+        self.show_messages()
 
     def chat_findchildreen(self):
         self.qt_left_scroll = self.window_chat.findChild(
@@ -80,36 +80,30 @@ class MainUI(QMainWindow, AuthUI):
         message = self.qt_message_area.toPlainText()
         # self.message_dict[self.current_user].message_list = message
         if self.current_user in self.message_dict:
-            print('found')
+            self.message_dict[self.current_user].append((message, 0))
         else:
             self.message_dict[self.current_user] = []
             self.message_dict[self.current_user].append((message, 0))
 
         ciphertext, key = self.AES.AES_Encrypt(text=message)
-        private_key_bin = self.read_private()
         AES_Key_Cyphered = self.RSA.RSA_Encrypt(
-            private=private_key_bin, public=self.pub_key, text=key)
+            private=self.private_key_bin, public=self.pub_key, text=key)
 
         self.SocketsIO.send_message(
             cypherkey=AES_Key_Cyphered, cyphertext=ciphertext, user=self.current_user)
 
-        # print(f"Message from {self.current_user}: {message}")
         self.qt_message_area.clear()
-
-        temp = QLabel(f"{self.current_user}: {message}")
-        # temp.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        temp.setStyleSheet("background-color: rgb(255, 0, 0);")
-        temp.setAlignment(Qt.AlignRight)
-        self.Conditions = True
-        self.qt_Message_scroll.addWidget(temp)
+        self.show_messages()
+        
 
     def read_private(self):
         binary = None
         path, _ = QFileDialog.getOpenFileName(
-            None, "Open Bin File", "./", "Binary Files (*.bin)")
+            None, "Open PEM File", "./key/", "PEM(*.pem)")
         with open(path, 'rb') as f:
             binary = f.read()
-        return binary
+        self.private_key_bin = self.RSA.rsa_private_key.load_pkcs1(binary)
+        print(self.private_key_bin)
 
     def populate_user_list(self, users):
         self.all_users = users
@@ -121,24 +115,36 @@ class MainUI(QMainWindow, AuthUI):
 
     def set_second_client(self, User, Public):
         # print(User)
-        self.qt_user_label.setText(f"{User}, {Public}")
-        self.pub_key = Public
+        self.qt_user_label.setText(f"{User}")
+        # print()
+        self.pub_key = self.RSA.rsa_public_key.load_pkcs1(Public)
+        print(self.pub_key)
         self.current_user = User
         self.show_messages()
 
     def show_messages(self):
-        for i in self.message_dict[self.current_user]:
-            message, who = i
-            temp = QLabel(f"{message}: {i[0]}")
+        while self.qt_Message_scroll.count() > 0:
+            layout_item = self.qt_Message_scroll.takeAt(0)
+            widget_to_remove = layout_item.widget()
+            if widget_to_remove:
+                widget_to_remove.deleteLater()
+        if self.current_user in self.message_dict:
 
-            if who == 0:
-                temp.setStyleSheet("background-color: rgb(0, 255, 0);")
-                temp.setAlignment(Qt.AlignRight)
-            else:
-                temp.setStyleSheet("background-color: rgb(0, 0, 255);")
-                temp.setAlignment(Qt.AlignLeft)
+            for i in self.message_dict[self.current_user]:
+                message, who = i
 
-            self.qt_Message_scroll.addWidget(temp)
+                if who == 0:
+                    temp = QLabel(f"you: {message}")
+                    temp.setStyleSheet("background-color: rgb(150, 255, 150);")
+                    temp.setAlignment(Qt.AlignRight)
+                else:
+                    temp = QLabel(f"them: {message}")
+                    temp.setStyleSheet("background-color: rgb(150, 150, 255);")
+                    temp.setAlignment(Qt.AlignLeft)
+
+                self.qt_Message_scroll.addWidget(temp)
+        else:
+            print('No messages')
 # done
 
 

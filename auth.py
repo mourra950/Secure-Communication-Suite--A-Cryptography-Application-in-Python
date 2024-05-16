@@ -43,11 +43,14 @@ class AuthUI():
     def auth_setup_btn(self):
         self.qt_new_btn.clicked.connect(self.new_user)
         self.qt_auth_btn.clicked.connect(self.authenticate_user)
-        self.qt_switch_btn.clicked.connect(self.switchpage)
+        # self.qt_switch_btn.clicked.connect(self.switchpage)
 
     def switchpage(self):
+        private_key_bin = self.read_private()
         self.auth_window.close()
+        self.window_chat.setWindowTitle(self.username)
         self.window_chat.show()
+
         self.SocketsIO.request_all_users()
 
     def hash_sha256(self, plaintext):
@@ -59,18 +62,19 @@ class AuthUI():
         username = self.qt_username_line.text()
         password = self.qt_password_line.text()
         temp = RSA.RSA_Task()
-        public = temp.rsa_public_key
-        private = temp.rsa_private_key
+        public = temp.rsa_public_key.save_pkcs1()
+        private = temp.rsa_private_key.save_pkcs1()
 
-        self.SocketsIO.socket_signup(username, password, public.n)
+        self.SocketsIO.socket_signup(username, password, public)
 
         path, _ = QFileDialog.getSaveFileName(
-            None, "Save Public Key", "./key/", "PEM (*.pem)")
+            None, "Save Private Key", "./key/", "PEM (*.pem)")
         with open(path, "wb+") as f:
-            f.write(str(private.d).encode())
+            f.write(private)
 
     def authenticate_user(self):
         username = self.qt_username_line.text()
+        self.username = username
         password = self.qt_password_line.text()
         self.SocketsIO.socket_login(username, password)
 
