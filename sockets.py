@@ -43,12 +43,12 @@ class SocketsIO(QObject):
         QObject.__init__(self)
         # print(self)
         self.sio = socketio.Client()
-        self.sio.connect('http://localhost:3000')
+        self.sio.connect('https://secure-communication-suite-server.onrender.com/')
         self.callbacks()
 
     def run(self):
         try:
-            self.sio.connect('http://localhost:3000')
+            self.sio.connect('https://secure-communication-suite-server.onrender.com/')
             self.callbacks()
         except:
             self.switch.emit()
