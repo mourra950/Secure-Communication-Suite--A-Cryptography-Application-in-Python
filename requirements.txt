@@ -1,5 +1,5 @@
 pycryptodome==3.20.0
-PySide6
+PySide6==6.6.1
 eciespy==0.4.1
 python-socketio==5.11.2
 pymongo==4.3.3
